@@ -1,6 +1,4 @@
 const Categories = require('./model');
-const mongoose = require('mongoose')
-const { ObjectID } = require( 'bson');
 const create = async (req, res, next) => {
     try {
         const {name} = req.body
@@ -51,7 +49,7 @@ const update = async (req, res, next) => {
         const result = await Categories.findByIdAndUpdate(
             { _id:id },
             { name },
-            { runValidators: true}
+            { new:true, runValidators: true}
         )
 
         res.status(200).json({
@@ -62,9 +60,22 @@ const update = async (req, res, next) => {
     }
 }
 
+const destroy = async (req, res, next) => {
+    const { id } = req.params
+
+    const result = await Categories.findOneAndDelete({
+        id:id
+    })
+    res.status(200).json({
+        data: result
+    })
+
+}
+
 module.exports = {
     create,
     index,
     find,
-    update
+    update,
+    destroy
 }

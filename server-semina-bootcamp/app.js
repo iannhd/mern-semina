@@ -14,12 +14,18 @@ const categoriesRouter = require('./app/api/v1/categories/router')
 
 const v1 = '/api/v1/cms';
 
+// custom error handler
+
+const notFoundMiddleware = require('./app/middlewares/not-found')
+const handleErrorMiddleware = require('./app/middlewares/handle-error')
+
+
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
 app.get('/', (req, res) => {
     res.status(200).json({
         message: "Welcome to api semina"
@@ -27,5 +33,8 @@ app.get('/', (req, res) => {
 })
 
 app.use(v1, categoriesRouter)
+
+app.use(notFoundMiddleware)
+app.use(handleErrorMiddleware)
 
 module.exports = app;
