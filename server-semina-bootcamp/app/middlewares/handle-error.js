@@ -1,10 +1,15 @@
 const {StatusCodes} = require('http-status-codes')
 const errorMiddlewares = (err, req, res, next) => {
     
+
+    console.log(err.message, "error 1");
+    console.log(err.StatusCodes, "error 2");
+    console.log(err.errors, "error 3");
+    console.log(err, "error 4")
     let customError = {
         // set default
         statusCode: err.StatusCodes || StatusCodes.INTERNAL_SERVER_ERROR,
-        msg: err.message || 'Something wrong, try again later'
+        msg: err.message || err || 'Something wrong, try again later'
     }
 
     if(err.name === "ValidationError") {
@@ -20,7 +25,7 @@ const errorMiddlewares = (err, req, res, next) => {
     }
 
     if(err.name === 'CastError'){
-        customError.msg = `No item found wiht id : ${err.value}`
+        customError.msg = `No item found with id : ${err.value}`
         customError.statusCode = 404
     }
 
