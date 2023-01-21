@@ -15,7 +15,7 @@ const create = async (req, res, next) => {
     try {
 
         const result = await createCategories(req)
-        res.status(StatusCodes.CREATED).json({
+        res.status(StatusCodes).json({
             data:result
         })
     } catch (error) {
