@@ -84,7 +84,7 @@ const updateTalents =  async (req) => {
 }   
 
 const deleteTalents = async (req) => {
-    const { id } = body.req
+    const { id } = req.params
 
     const result = await Talents.findOne({
         _id: id
