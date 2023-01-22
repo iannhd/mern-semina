@@ -62,7 +62,7 @@ const createEvents = async (req) => {
 
     const check = await Events.findOne({title})
 
-    if (check) throw BadRequest('Judul acara sudah terdaftar')
+    if (check) throw new BadRequest('Judul acara sudah terdaftar')
 
     const result = await Events.create({
         title,
@@ -124,13 +124,14 @@ const updateEvents = async (req) => {
     })
 
     if(!checkEvent) throw new NotFoundError(`Tidak ada event dengan id : ${id}`)
+    console.log(checkEvent, "=====> ini check");
     
     const check = await Events.findOne({
         title,
         _id: {$ne: id}
     })
-
-    if( check ) throw new BadRequest(`Judul event sudah ada`)
+    console.log(check, "=====> ini check");
+    if(check) throw new BadRequest(`Judul event sudah ada`)
 
     const result = await Events.findOneAndUpdate(
         {_id: id},
@@ -161,7 +162,7 @@ const deleteEvents = async (req) => {
         _id: id
     })
 
-    if(! result) throw NotFoundError(`Tidak ada acara dengan id : ${id}`)
+    if(! result) throw new NotFoundError(`Tidak ada acara dengan id : ${id}`)
 
     return await result.remove()
 }
