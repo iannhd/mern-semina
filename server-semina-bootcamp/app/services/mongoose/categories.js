@@ -71,7 +71,9 @@ const deleteCategories = async (req) => {
 
 }
 
-const checkingCategories = async (req) => {
+const checkCategories = async (id) => {
+    
+
     const result = await Categories.findOne({
         _id : id
     })
@@ -80,4 +82,4 @@ const checkingCategories = async (req) => {
 
     return result
 }
-module.exports = {getAllCategories, createCategories, getOneCategories, updateCategories, deleteCategories, checkingCategories}
+module.exports = {getAllCategories, createCategories, getOneCategories, updateCategories, deleteCategories, checkCategories}

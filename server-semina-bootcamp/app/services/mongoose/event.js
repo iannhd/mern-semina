@@ -1,8 +1,8 @@
 // import model Events
 const Events = require('../../api/v1/events/model')
 const { checkImage } = require('./image')
-const { checkingCategories } = require('./categories')
-const { checkingTalents } = require('./talents')
+const { checkCategories } = require('./categories')
+const { checkTalents } = require('./talents')
 
 // import custom error
 const {NotFoundError, BadRequest} = require('../../errors')
@@ -57,8 +57,8 @@ const createEvents = async (req) => {
     } = req.body
 
     await checkImage(image)
-    await checkingCategories(category)
-    await checkingTalents(talent)
+    await checkCategories(category)
+    await checkTalents(talent)
 
     const check = await Events.findOne({title})
 
@@ -77,6 +77,8 @@ const createEvents = async (req) => {
         category,
         talent 
     })
+    
+    return result
 }
 
 const getOneEvents = async (req) => {
@@ -94,7 +96,7 @@ const getOneEvents = async (req) => {
         populate: {path: 'image', select: ' _id name'}
     })
 
-    if (!result) throw new NotFoundError(`Tidak ada pembicara dengan id : ${id}`)
+    if (!result) throw new NotFoundError(`Tidak ada acara dengan id : ${id}`)
 
     return result
 }
@@ -115,7 +117,14 @@ const updateEvents = async (req) => {
         category,
         talent 
     } = req.body
+    
+    // cek apakah ada event dengan id yang dimasukkan
+    const checkEvent = await Events.findOne({
+        _id:  id
+    })
 
+    if(!checkEvent) throw new NotFoundError(`Tidak ada event dengan id : ${id}`)
+    
     const check = await Events.findOne({
         title,
         _id: {$ne: id}

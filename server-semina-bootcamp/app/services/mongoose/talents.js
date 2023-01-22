@@ -97,7 +97,7 @@ const deleteTalents = async (req) => {
     return result
 }
 
-const checkingTalents = async (req) => {
+const checkTalents = async (id) => {
     const result = await Talents.findOne({
         _id : id
     })
@@ -113,7 +113,7 @@ module.exports = {
     getOneTalents,
     updateTalents,
     deleteTalents,
-    checkingTalents
+    checkTalents
 }
 
 
