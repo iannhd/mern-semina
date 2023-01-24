@@ -1,8 +1,9 @@
 const Categories = require('../../api/v1/categories/model')
 const { BadRequest, NotFoundError } = require('../../errors')
 
-const getAllCategories = async () => {
-    const result = await Categories.find()
+const getAllCategories = async (req) => {
+    // console.log(req.user, "===>")
+    const result = await Categories.find({organizer: req.user.organizer})
 
     return result
 }
@@ -16,7 +17,7 @@ const createCategories = async (req) => {
 
     if(check) throw new BadRequest('Kategori Nama duplikat')
     
-    const result = await Categories.create({name})
+    const result = await Categories.create({name, organizer: req.user.organizer})
     
     return result
 }
@@ -24,7 +25,8 @@ const createCategories = async (req) => {
 const getOneCategories = async (req, res) => {
     let  {id}  = req.params
 
-    const result = await Categories.findOne({_id:id})
+    const result = await Categories.findOne({_id:id, 
+    organizer: req.user.organizer})
     console.log(result, "================>");
     if(!result ) throw new NotFoundError(`Tidak ada Kategori dengan id : ${id}`)
 
@@ -37,7 +39,8 @@ const updateCategories = async (req) => {
 
     const check = await Categories.findOne({
         name,
-        id: {$ne:id}
+        organizer: req.user.organizer,
+        id: {$ne:id},
     })
 
     if(check) throw new BadRequest('Kategori Nama duplikat')
@@ -45,7 +48,7 @@ const updateCategories = async (req) => {
     const result = await Categories.findOneAndUpdate(
         {_id: id},
         { name },
-        { new:true, runValidators:true}
+        { new:true, runValidators:true},
     )
 
     if(! result) throw new NotFoundError(`Tidak ada kategori dengan id: ${id}`)
@@ -58,7 +61,8 @@ const deleteCategories = async (req) => {
     const { id } = req.params
 
     const result = await Categories.findOne({
-        _id:id
+        _id:id,
+        organizer: req.user.organizer
     })
 
     console.log(result);
@@ -75,7 +79,8 @@ const checkCategories = async (id) => {
     
 
     const result = await Categories.findOne({
-        _id : id
+        _id : id,
+        organizer: req.user.organizer
     })
 
     if (! result) throw new NotFoundError(`Tidak ada kategori dengan id : ${id}`)
