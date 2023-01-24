@@ -13,7 +13,7 @@ const createCategories = async (req) => {
     
     const { name } = req.body
 
-    const check = await Categories.findOne({name})
+    const check = await Categories.findOne({name, organizer: req.user.organizer})
 
     if(check) throw new BadRequest('Kategori Nama duplikat')
     
@@ -25,8 +25,9 @@ const createCategories = async (req) => {
 const getOneCategories = async (req, res) => {
     let  {id}  = req.params
 
-    const result = await Categories.findOne({_id:id, 
-    organizer: req.user.organizer})
+    const result = await Categories.findOne({
+        _id:id, 
+        organizer: req.user.organizer})
     console.log(result, "================>");
     if(!result ) throw new NotFoundError(`Tidak ada Kategori dengan id : ${id}`)
 

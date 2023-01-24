@@ -15,6 +15,7 @@ const imageRouter = require('./app/api/v1/images/router')
 const talentRouter = require('./app/api/v1/talents/router')
 const eventRouter = require('./app/api/v1/events/router')
 const organizersRouter = require('./app/api/v1/organizers/router')
+const orderRouter = require('./app/api/v1/orders/router')
 const authCMSRouter = require('./app/api/v1/auth/router')
 const v1 = '/api/v1/cms';
 
@@ -41,6 +42,7 @@ app.use(v1, imageRouter)
 app.use(v1, talentRouter)
 app.use(v1, eventRouter)
 app.use(v1, organizersRouter)
+app.use(v1, orderRouter)
 app.use(v1, authCMSRouter)
 
 app.use(notFoundMiddleware)

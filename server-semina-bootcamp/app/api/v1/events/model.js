@@ -68,6 +68,11 @@ const EventShcema = new mongoose.Schema(
             ref: 'Category',
             required: true
         },
+        organizer: {
+            type: mongoose.Types.ObjectId,
+            ref: 'Organizer',
+            required: true
+        },
         talent: {
             type: mongoose.Types.ObjectId,
             ref: 'Talent',

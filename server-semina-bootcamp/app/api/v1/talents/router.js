@@ -2,15 +2,35 @@ const express = require('express');
 const router = express();
 const { create, index, find, update, destroy } = require('./controller')
 
-router.get('/talents', index)
+const { 
+    authenticateUser,
+    authorizeRole
+} = require('../../../middlewares/auth')
 
-router.post('/talents', create)
+router.get('/talents',
+authenticateUser, 
+authorizeRole('organizer'),
+index)
 
-router.get('/talents/:id', find)
+router.post('/talents',
+authenticateUser, 
+authorizeRole('organizer'),
+create)
 
-router.put('/talents/:id', update)
+router.get('/talents/:id',
+authenticateUser, 
+authorizeRole('organizer'),
+find)
 
-router.delete('/talents/:id', destroy)
+router.put('/talents/:id',
+authenticateUser, 
+authorizeRole('organizer'),
+update)
+
+router.delete('/talents/:id',
+authenticateUser, 
+authorizeRole('organizer'),
+destroy)
 
 
 module.exports = router;
