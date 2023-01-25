@@ -15,7 +15,7 @@ const tranpsorter = nodemailer.createTransport({
 
 const otpMail = async (email, data) => {
     try {
-        let template = fs.readFileSync('app/views/email/opt.html', 'utf-8')
+        let template = fs.readFileSync('app/views/email/otp.html', 'utf-8')
 
         let message = {
             from: gmail,
@@ -23,6 +23,8 @@ const otpMail = async (email, data) => {
             subject: 'Otp for registration login',
             html: Mustache.render(template, data)
         }
+
+        console.log(message.to);
 
         return await tranpsorter.sendMail(message)
     } catch (error) {
