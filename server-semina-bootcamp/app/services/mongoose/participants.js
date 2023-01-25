@@ -1,6 +1,7 @@
 const Events  = require('../../api/v1/events/model')
 const Orders  = require('../../api/v1/orders/model')
 const Participant = require('../../api/v1/participants/model')
+const Payment = require('../../api/v1/payments/model')
 const {BadRequest, NotFoundError, Unauthorized} = require('../../errors')
 const { createJWT, createTokenParticipant } = require('../../utils')
 
@@ -113,6 +114,71 @@ const getAllOrders = async (req) => {
     return result
 }
 
+//Tugas sendMail Invoice
+//TODO: ambil data dari personal detail dan buat orderMail
+
+const checkoutOrder = async (req) => {
+    const { event, personalDetail, payment, tickets } = req.body
+
+    const checkEvent = await Events.findOne({ _id: event })
+    console.log(event, "============>");
+    if(! checkEvent) throw NotFoundError(`Tidak ada acara dengan id : ${id}`)
+
+    const checkPayment = await Payment.findOne({ _id: payment})
+
+    if(! checkPayment ) throw new NotFoundError(`Tidak ada metode pembayaran dengan id : ${payment}`)
+
+    let totalPay = 0,
+    totalOrderTicket = 0
+
+    await tickets.forEach((tic) => {
+        checkEvent.tickets.forEach((ticket) => {
+            if(tic.ticketCategories.type === ticket.type) {
+                if(tic.sumTicket > ticket.stock) {
+                    throw new NotFoundError(`Stock event tidak mencukupi`)
+                } else {
+                    ticket.stock -= tic.sumTicket
+
+                    totalOrderTicket += tic.sumTicket
+                    totalPay += tic.ticketCategories.price * tic.sumTicket
+                }
+            }
+        })
+    })
+
+    await checkEvent.save()
+
+    const historyEvent = {
+        
+        title: checkEvent.title,
+        date: checkEvent.date,
+        about: checkEvent.about,
+        tagline: checkEvent.tagline,
+        keyPoint: checkEvent.keyPoint,
+        venueName: checkEvent.venueName,
+        tickets: tickets,
+        image: checkEvent.image,
+        category: checkEvent.category,
+        talent: checkEvent.talent,
+        organizer: checkEvent.organizer,
+    }
+
+    const result = new Orders({
+        date: new Date(),
+        personalDetail: personalDetail,
+        totalPay,
+        totalOrderTicket,
+        orderItems: tickets,
+        participant: req.participant.id,
+        historyEvent,
+        payment,
+        event
+    })
+
+    return await result.save()
+
+}
+
 
 module.exports = {
     signUpParticipant,
@@ -121,4 +187,5 @@ module.exports = {
     getAllEvents,
     getOneEvent,
     getAllOrders,
+    checkoutOrder,
 }

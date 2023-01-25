@@ -46,11 +46,11 @@ const authenticateParticipant = async (req, res, next) => {
 
         const payload = isTokenValid({ token })
 
-        req.user = {
+        req.participant = {
             email       : payload.email,
             lastName    : payload.lastName,
             firstName   : payload.firstName,
-            id          : payload.userId
+            id          : payload.participantId
         }
 
         next()
