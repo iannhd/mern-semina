@@ -1,4 +1,5 @@
 const Events  = require('../../api/v1/events/model')
+const Orders  = require('../../api/v1/orders/model')
 const Participant = require('../../api/v1/participants/model')
 const {BadRequest, NotFoundError, Unauthorized} = require('../../errors')
 const { createJWT, createTokenParticipant } = require('../../utils')
@@ -106,11 +107,18 @@ const getOneEvent = async (req) => {
     return result
 }
 
+const getAllOrders = async (req) => {
+    const result = await Orders.find({ participant: req.participant.id})
+
+    return result
+}
+
+
 module.exports = {
     signUpParticipant,
     signinParticipant,
     activateParticipant,
     getAllEvents,
     getOneEvent,
-
+    getAllOrders,
 }
