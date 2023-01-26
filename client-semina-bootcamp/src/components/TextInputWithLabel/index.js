@@ -6,7 +6,8 @@ const TextInputWithLabel = ({
     value,
     type,
     onChange,
-    placeholder
+    placeholder,
+    autoComplete
 }) => {
   return (
     <Form.Group className="mb-2">
@@ -17,6 +18,7 @@ const TextInputWithLabel = ({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
+        autoComplete={autoComplete}
         />
     </Form.Group>
   )

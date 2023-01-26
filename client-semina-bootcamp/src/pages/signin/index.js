@@ -1,15 +1,27 @@
 import React, { useState } from 'react'
-import {Container, Card, Button, Form} from 'react-bootstrap'
-import SButton from '../../components/Button';
-import TextInputWithLabel from '../../components/TextInputWithLabel';
+import {Container, Card, } from 'react-bootstrap'
 import axios from 'axios'
 import SAlert from '../../components/Alert';
+import { useNavigate, Navigate} from 'react-router-dom';
+import SForm from './form'
+
+import {config} from '../../configs/index'
 
 function PageSignin() {
+    const navigate = useNavigate()
+    const token = localStorage.getItem('token')
     const [form, setForm] = useState({
         email: "",
         password: ""
     })
+
+    const [ alert, setAlert ] = useState({
+        status: false,
+        message: '',
+        type: 'danger'
+    })
+    
+    const [ isLoading, setIsLoading] = useState(false)
 
     const handleChange = (e) => {
         setForm({...form, [e.target.name]: e.target.value})
@@ -17,45 +29,41 @@ function PageSignin() {
     }
 
     const handleSubmit = async () => {
+        setIsLoading(true)
+        setAlert({
+            status: false
+        })
         try {
-            console.log('masuk sini');
-            const res = await axios.post('http://localhost:9000/api/v1/cms/auth/signin',
-            {
-                email: form.email,
-                password: form.password
-            })
-
-            console.log(res, "=========>");
+            const res = await axios.post(`${config.api_host_dev}/cms/auth/signin`, form)    
+            setIsLoading(false)
+            localStorage.setItem('token', res.data.data.token)
+            navigate('/')
         } catch (error) {
-            console.log(error.response.data.msg);
+            // console.log(error.response.data.msg);
+            setAlert({
+                status: true,
+                message: error?.response?.data?.msg ?? 'Internal Server Error',
+                type: 'danger'
+            })
+            setIsLoading(false)
         }
     }
+
+    if(token) return <Navigate to='/' />
   return (
-    <Container md={12}>
+    <Container md={12} className='my-5'>
+      <div className='m-auto' style={{width: "50%"}}>
+      {alert.status && <SAlert message={alert.message} type={alert.type}/>}
+      </div>
     <Card style={{ width: '50%' }} className='m-auto mt-5'>
-      <Card.Body>
-        {<SAlert message={'test'} type='danger'/>}
-      <Form onSubmit={handleSubmit}>
-        <TextInputWithLabel
-        label='Email address'
-        name='email'
-        value={form.email}
-        type='email'
-        onChange={handleChange}
-        placeholder="Enter your email..."
-        />
-        <TextInputWithLabel
-        label='Password'
-        name='password'
-        value={form.password}
-        type='password'
-        onChange={handleChange}
-        autocomplete='off'
-        placeholder='Password..'
-        />
-        <SButton variant="primary" action={handleSubmit}>Submit</SButton>
-        </Form>
-      </Card.Body>
+        <Card.Body>
+            <SForm 
+            handleChange={handleChange} 
+            isLoading={isLoading} 
+            handleSubmit={handleSubmit}
+            form={form} 
+            />
+        </Card.Body>
     </Card>
     </Container>
   );
