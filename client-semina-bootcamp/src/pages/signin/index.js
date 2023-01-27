@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
 import {Container, Card, } from 'react-bootstrap'
-import axios from 'axios'
 import SAlert from '../../components/Alert';
 import { useNavigate, Navigate} from 'react-router-dom';
 import SForm from './form'
-
-import {config} from '../../configs/index'
-
+import {postData} from '../../utils/fetch'
+import { useDispatch } from 'react-redux'
+import { userLogin } from '../../redux/auth/actions'
 function PageSignin() {
+    const dispatch = useDispatch()
     const navigate = useNavigate()
-    const token = localStorage.getItem('token')
+
     const [form, setForm] = useState({
         email: "",
         password: ""
@@ -34,12 +34,11 @@ function PageSignin() {
             status: false
         })
         try {
-            const res = await axios.post(`${config.api_host_dev}/cms/auth/signin`, form)    
+            const res = await postData(`/cms/auth/signin`, form)    
             setIsLoading(false)
-            localStorage.setItem('token', res.data.data.token)
+            dispatch(userLogin(res.data.data.token, res.data.data.role))
             navigate('/')
         } catch (error) {
-            // console.log(error.response.data.msg);
             setAlert({
                 status: true,
                 message: error?.response?.data?.msg ?? 'Internal Server Error',
@@ -49,7 +48,6 @@ function PageSignin() {
         }
     }
 
-    if(token) return <Navigate to='/' />
   return (
     <Container md={12} className='my-5'>
       <div className='m-auto' style={{width: "50%"}}>
