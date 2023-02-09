@@ -1,7 +1,7 @@
 import React from "react"; 
 
 function Thead({text}){
-    console.log(text, "dari thead");
+
     return (
         <thead>
             <tr>

@@ -4,12 +4,8 @@ import GuestOnlyRoute from '../components/GuestOnlyRoute';
 import SNavbar from '../components/Navbar';
 import Login from '../pages/signin';
 import { HomeRoute } from './HomeRoute';
-// import { TalentsRoute } from './TalentsRoute';
 import { CategoriesRoute } from './CategoriesRoute';
-// import { PaymentsRoute } from './PaymentsRoute';
-// import SNavbar from '../components/Navbar';
-// import { EventsRoute } from './EventsRoute';
-// import { OrdersRoute } from './OrdersRoute';
+
 
 export function AppRoutes() {
   return (

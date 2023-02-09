@@ -1,68 +1,75 @@
-import React, { useState } from 'react'
-import { Container } from 'react-bootstrap'
-import  SBreadcrumb  from '../../components/Breadcrumb'
-import SAlert from '../../components/Alert'
-import {useParams, useNavigate} from 'react-router-dom' 
-import Form from './form'
-import axios from 'axios'
-import { config } from '../../configs'
-import { postData } from '../../utils/fetch'
+import React, { useState } from 'react';
+import { Container } from 'react-bootstrap';
+import SBreadCrumb from '../../components/Breadcrumb';
+import SAlert from '../../components/Alert';
+import Form from './form';
+import { postData } from '../../utils/fetch';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setNotif } from '../../redux/notif/actions';
 
+function CategoryCreate() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [form, setForm] = useState({
+    name: '',
+  });
 
-const CategoryCreate = () => {
-    // const { token } = JSON.parse(localStorage.getItem('auth'))
-    const navigate = useNavigate()
-    const [form, setForm] = useState({
-        name: ''
-    })
+  const [alert, setAlert] = useState({
+    status: false,
+    type: '',
+    message: '',
+  });
 
-    const [alert, setAlert] = useState({
-        status: false,
-        type: '',
-        message: ''
-    })
+  const [isLoading, setIsLoading] = useState(false);
 
-    const [isLoading, setIsLoading] = useState(false)
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
-    const handleChange = (e) => {
-        setForm({...form, [e.target.name]: e.target.value})
-    }
-
-    const handleSubmit = async () => {
-        setIsLoading(true)
-        try {
-           const res = await postData('/cms/categories', form)
-
-
-            navigate('/categories')
-            setIsLoading(false)
-        } catch (error) {
-            setIsLoading(false)
-            setAlert({
-                status: true,
-                type: 'danger',
-                message: error.response.data.msg
-            })
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    try {
+      const res = await postData('/cms/categories', form);
+    if (res?.data?.data) {
+      dispatch(
+        setNotif(
+          true,
+          'success',
+          `berhasil tambah kategori ${res.data.data.name}`
+        )
+      );
+      navigate('/categories');
+      setIsLoading(false);
         }
+    } catch(error) {
+      console.log(error);
+      setIsLoading(false);
+      setAlert({
+        ...alert,
+        status: true,
+        type: 'danger',
+        message: error.response.data.msg,
+      });
     }
+  };
+
   return (
-    <>
     <Container>
-        <SBreadcrumb
-        textSecond={'Categories'}
-        urlSecond={'/categories'}
-        textThird={'Create'}
-        />
-        {alert.status && <SAlert type={alert.type} message={alert.message}/>}
-        <Form
+      <SBreadCrumb
+        textSecound={'Categories'}
+        urlSecound={'/categories'}
+        textThird='Create'
+      />
+      {alert.status && <SAlert type={alert.type} message={alert.message} />}
+      <Form
         form={form}
         isLoading={isLoading}
         handleChange={handleChange}
         handleSubmit={handleSubmit}
-        />
+      />
     </Container>
-    </>
-  )
+  );
 }
 
-export default CategoryCreate
+export default CategoryCreate;

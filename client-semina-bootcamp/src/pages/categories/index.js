@@ -70,7 +70,6 @@ function Categories() {
     // });
   };
 
-  console.log(categories, "===> categories");
 
   return (
     <Container className='mt-3'>
@@ -85,9 +84,9 @@ function Categories() {
         </Button>
       )}
 
-      {/* {notif.status && (
+      {notif.status && (
         <SAlert type={notif.typeNotif} message={notif.message} />
-      )} */}
+      )}
 
       <Table
         status={categories.status}
