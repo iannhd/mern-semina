@@ -6,10 +6,11 @@ import {useParams, useNavigate} from 'react-router-dom'
 import Form from './form'
 import axios from 'axios'
 import { config } from '../../configs'
-import SNavbar from '../../components/Navbar'
+import { postData } from '../../utils/fetch'
+
 
 const CategoryCreate = () => {
-    const token = localStorage.getItem('token')
+    // const { token } = JSON.parse(localStorage.getItem('auth'))
     const navigate = useNavigate()
     const [form, setForm] = useState({
         name: ''
@@ -30,12 +31,7 @@ const CategoryCreate = () => {
     const handleSubmit = async () => {
         setIsLoading(true)
         try {
-            console.log('masuks sini');
-            await axios.post(`${config.api_host_dev}/cms/categories`, form, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
+           const res = await postData('/cms/categories', form)
 
 
             navigate('/categories')
@@ -51,7 +47,6 @@ const CategoryCreate = () => {
     }
   return (
     <>
-    <SNavbar />
     <Container>
         <SBreadcrumb
         textSecond={'Categories'}
