@@ -48,7 +48,7 @@ function CategoryEdit() {
         setNotif(
           true,
           'success',
-          `berhasil ubah kategori ${res.data.data.name}`
+          `Berhasil ubah kategori ${res.data.data.name}`
         )
       );
       navigate('/categories');

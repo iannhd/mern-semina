@@ -1,23 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { Container } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import SBreadCrumb from '../../components/Breadcrumb';
+import BreadCrumb from '../../components/Breadcrumb';
 import Button from '../../components/Button';
-import Table from '../../components/TableWithAction';
+import Table from '../../components/TableWithAction'
+import SearchInput from '../../components/SearchInput';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchCategories } from '../../redux/categories/actions';
-import SAlert from '../../components/Alert';
+import { fetchTalents, setKeyword } from '../../redux/talents/actions';
+import AlertMessage from '../../components/Alert';
 import Swal from 'sweetalert2';
 import { deleteData } from '../../utils/fetch';
 import { setNotif } from '../../redux/notif/actions';
-import { accessCategories } from '../../const/access';
+import { accessTalents } from '../../const/access';
 
-function Categories() {
+function TalentsPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
   const notif = useSelector((state) => state.notif);
-  const categories = useSelector((state) => state.categories);
+  const talents = useSelector((state) => state.talents);
+
   const [access, setAccess] = useState({
     tambah: false,
     hapus: false,
@@ -29,8 +30,8 @@ function Categories() {
       ? JSON.parse(localStorage.getItem('auth'))
       : {};
     const access = { tambah: false, hapus: false, edit: false };
-    Object.keys(accessCategories).forEach(function (key, index) {
-      if (accessCategories[key].indexOf(role) >= 0) {
+    Object.keys(accessTalents).forEach(function (key, index) {
+      if (accessTalents[key].indexOf(role) >= 0) {
         access[key] = true;
       }
     });
@@ -42,8 +43,8 @@ function Categories() {
   }, []);
 
   useEffect(() => {
-    dispatch(fetchCategories());
-  }, [dispatch]);
+    dispatch(fetchTalents());
+  }, [dispatch, talents.keyword]);
 
   const handleDelete = (id) => {
     Swal.fire({
@@ -57,43 +58,42 @@ function Categories() {
       cancelButtonText: 'Batal',
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const res = await deleteData(`/cms/categories/${id}`);
+        const res = await deleteData(`/cms/talents/${id}`);
+
         dispatch(
           setNotif(
             true,
             'success',
-            `Berhasil hapus kategori ${res.data.data.name}`
+            `berhasil hapus speaker ${res.data.data.name}`
           )
         );
-        dispatch(fetchCategories());
+
+        dispatch(fetchTalents());
       }
     });
   };
 
-
   return (
     <Container className='mt-3'>
-      <SBreadCrumb textSecound={'Categories'} />
-
+      <BreadCrumb textSecound={'Talents'} />
       {access.tambah && (
-        <Button
-          className={'mb-3'}
-          action={() => navigate('/categories/create')}
-        >
-          Tambah
-        </Button>
+        <div className='mb-3'>
+          <Button action={() => navigate('/talents/create')}>Tambah</Button>
+        </div>
       )}
-
+      <SearchInput
+        query={talents.keyword}
+        handleChange={(e) => dispatch(setKeyword(e.target.value))}
+      />
       {notif.status && (
-        <SAlert type={notif.typeNotif} message={notif.message} />
+        <AlertMessage type={notif.typeNotif} message={notif.message} />
       )}
-
       <Table
-        status={categories.status}
-        thead={['Nama', 'Aksi']}
-        data={categories.data}
-        tbody={['name']}
-        editUrl={access.edit ? `/categories/edit` : null}
+        status={talents.status}
+        thead={['Nama', 'Role', 'Avatar', 'Aksi']}
+        data={talents.data}
+        tbody={['name', 'role', 'avatar']}
+        editUrl={access.edit ? `/talents/edit` : null}
         deleteAction={access.hapus ? (id) => handleDelete(id) : null}
         withoutPagination
       />
@@ -101,4 +101,4 @@ function Categories() {
   );
 }
 
-export default Categories;
+export default TalentsPage;
