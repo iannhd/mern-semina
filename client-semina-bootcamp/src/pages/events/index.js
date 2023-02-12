@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import BreadCrumb from '../../components/Breadcrumb';
@@ -16,6 +16,7 @@ import SAlert from '../../components/Alert';
 import Swal from 'sweetalert2';
 import { deleteData, putData } from '../../utils/fetch';
 import { setNotif } from '../../redux/notif/actions';
+import { accessCategories } from '../../const/access';
 import SelectBox from '../../components/SelectBox';
 import {
   fetchListCategories,
@@ -29,6 +30,24 @@ function EventPage() {
   const notif = useSelector((state) => state.notif);
   const events = useSelector((state) => state.events);
   const lists = useSelector((state) => state.lists);
+  const [access, setAccess] = useState({
+    tambah: false,
+    hapus: false,
+    edit: false,
+  });
+
+  const checkAccess = () => {
+    let { role } = localStorage.getItem('auth')
+      ? JSON.parse(localStorage.getItem('auth'))
+      : {};
+    const access = { tambah: false, hapus: false, edit: false };
+    Object.keys(accessCategories).forEach(function (key, index) {
+      if (accessCategories[key].indexOf(role) >= 0) {
+        access[key] = true;
+      }
+    });
+    setAccess(access);
+  };
 
   useEffect(() => {
     dispatch(fetchEvents());
