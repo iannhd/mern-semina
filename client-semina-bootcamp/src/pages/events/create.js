@@ -161,7 +161,8 @@ function EventsCreate() {
   };
 
   const handlePlusKeyPoint = () => {
-    let _temp = [...form.keyPoint];
+    let _temp = [...form.keyPoint]; 
+    console.log(_temp);
     _temp.push('');
 
     setForm({ ...form, keyPoint: _temp });
@@ -174,8 +175,9 @@ function EventsCreate() {
         return i;
       })
       .indexOf(index);
-
+      
     _temp.splice(removeIndex, 1);
+    console.log(_temp, "removed");
     setForm({ ...form, keyPoint: _temp });
   };
 

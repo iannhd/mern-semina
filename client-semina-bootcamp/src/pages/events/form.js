@@ -26,7 +26,9 @@ export default function EventsForm({
   handlePlusTicket,
   handleMinusTicket,
   handleChangeTicket,
-}) {
+}) 
+
+{
   return (
     <Form className='mb-2'>
       <Row>
@@ -100,8 +102,8 @@ export default function EventsForm({
       <Form.Label>Key Point</Form.Label>
       <Row>
         {form.keyPoint.map((key, index) => (
-          <Col sm={6}>
-            <InputGroup className='mb-3' key={index}>
+          <Col sm={6} key={index}>
+            <InputGroup className='mb-3' >
               <FormControl
                 placeholder='Masukan keypoint'
                 value={key}
@@ -128,8 +130,8 @@ export default function EventsForm({
       <Row>
         <Col>
           <SelectBox
-            label={'Speaker'}
-            placeholder={'Masukan pembica'}
+            label={'Talent'}
+            placeholder={'Masukan nama talent'}
             name='talent'
             value={form.talent}
             options={lists.talents}
@@ -166,8 +168,8 @@ export default function EventsForm({
       <Form.Label>Tiket</Form.Label>
 
       {form.tickets.map((tic, index) => (
-        <Row>
-          <Col sm={6}>
+        <Row key={index}>
+          <Col sm={6}  >
             <TextInputWithLabel
               placeholder={'Masukan tipe tiket'}
               label={'type'}
@@ -177,7 +179,7 @@ export default function EventsForm({
               onChange={(e) => handleChangeTicket(e, index)}
             />
           </Col>
-          <Col sm={6}>
+          <Col sm={6}  >
             <TextInputWithLabel
               placeholder={'Masukan Harga'}
               label={'Harga'}
@@ -187,7 +189,7 @@ export default function EventsForm({
               onChange={(e) => handleChangeTicket(e, index)}
             />
           </Col>
-          <Col sm={6}>
+          <Col sm={6} >
             <TextInputWithLabel
               placeholder={'Masukan tipe tiket'}
               label={'Stock'}
@@ -197,7 +199,7 @@ export default function EventsForm({
               onChange={(e) => handleChangeTicket(e, index)}
             />
           </Col>
-          <Col sm={index !== 0 ? 5 : 6}>
+          <Col sm={index !== 0 ? 5 : 6} >
             <TextInputWithLabel
               placeholder={'Masukan status'}
               label={'Status'}
