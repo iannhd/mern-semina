@@ -137,7 +137,7 @@ export default function EventsForm({
             options={lists.talents}
             isClearable={true}
             handleChange={(e) => handleChange(e)}
-          />
+            />
         </Col>
         <Col>
           <TextInputWithLabel
@@ -169,6 +169,7 @@ export default function EventsForm({
 
       {form.tickets.map((tic, index) => (
         <Row key={index}>
+          
           <Col sm={6}  >
             <TextInputWithLabel
               placeholder={'Masukan tipe tiket'}
@@ -200,14 +201,24 @@ export default function EventsForm({
             />
           </Col>
           <Col sm={index !== 0 ? 5 : 6} >
-            <TextInputWithLabel
+            <SelectBox
               placeholder={'Masukan status'}
               label={'Status'}
               name='status'
               value={tic.status}
-              type='text'
-              onChange={(e) => handleChangeTicket(e, index)}
+              options={
+                [
+                  {
+                    label: "Aktif", value: true
+                  },
+                  {
+                    label: "Tidak Aktif", value: false
+                  },
+                ]
+              }
+              handleChange={(e) => handleChangeTicket(e, index)}
             />
+            {console.log(tic.status, "===> tic status")}
           </Col>
           {index !== 0 && (
             <Col

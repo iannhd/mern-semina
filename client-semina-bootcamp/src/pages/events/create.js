@@ -29,7 +29,7 @@ function EventsCreate() {
     tickets: [
       {
         type: '',
-        status: '',
+        status: [true, false],
         stock: '',
         price: '',
       },
@@ -124,7 +124,7 @@ function EventsCreate() {
       tagline: form.tagline,
       keyPoint: form.keyPoint,
       category: form.category.value,
-      talent: form.talent.value,
+      talent: form.talent.valueOf,
       status: form.status,
       tickets: form.tickets,
     };
